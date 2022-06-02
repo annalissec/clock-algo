@@ -1,10 +1,21 @@
 import "./input.scss";
+import { Cache } from "../cache/Cache";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function Input({cacheSize, setCacheSize}) {
+export default function Input({cacheSize, setCacheSize, pageNum, setPageNum, cache, setCache}) {
 
 	const [data, setData] = useState("")
+
+	useEffect(() => {
+		setCache(new Cache(cacheSize))
+	}, [cacheSize, setCache])
+
+	useEffect(() => {
+		if (Number.isInteger(parseInt(pageNum)))
+		cache.pageCall(pageNum)
+		console.log(cache)
+	}, [pageNum, cache])
 
 	function getData(val) {
 		setData(val.target.value)
@@ -19,9 +30,10 @@ export default function Input({cacheSize, setCacheSize}) {
 		</div>
 		<div className="pageNum">
 			<span>Page Num: </span>
-			<input type='text'/>
-			<button>Enter Page Number</button>
+			<input type='text' onChange={getData}/>
+			<button onClick={() => setPageNum(data)}>Enter Page Number</button>
 		</div>
+
 	</div>
   )
 }
