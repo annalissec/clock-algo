@@ -1,39 +1,49 @@
 import "./input.scss";
-import { Cache } from "../cache/Cache";
 
-import React, { useEffect, useState } from 'react'
 
-export default function Input({cacheSize, setCacheSize, pageNum, setPageNum, cache, setCache}) {
+import React, { useState } from 'react'
+
+export default function Input({cacheSize, setCacheSize, pageNum, setPageNum}) {
 
 	const [data, setData] = useState("")
+	const [page, setPage] = useState("")
+	const [show, setShow] = useState(true)
 
-	useEffect(() => {
-		setCache(new Cache(cacheSize))
-	}, [cacheSize, setCache])
-
-	useEffect(() => {
-		if (Number.isInteger(parseInt(pageNum)))
-		cache.pageCall(pageNum)
-		console.log(cache)
-	}, [pageNum, cache])
-
-	function getData(val) {
-		setData(val.target.value)
+	function handlePage(val)  {
+		setPageNum(val)
+		setPage("")
+	}
+	function handleSize(val)  {
+		setCacheSize(val)
+		setData("")
+		setShow(false)
 	}
 
   return (
 	<div className="input">
-		<div className="cache">
+		{show && <div className="cache">
 			<span>Cache Size: </span>
-			<input type='text' onChange={getData}/>
-			<button onClick={() => setCacheSize(data)}>Set Cache Size</button>
-		</div>
-		<div className="pageNum">
+			<input type='text' value={data} onChange={(data) => setData(data.target.value)} onKeyDown={(ev) => {
+				if (ev.key === 'Enter') {
+					ev.preventDefault()
+					handleSize(ev.target.value)
+				}
+			}}/>
+			<button onClick={() => handleSize(data)}>Set Cache Size</button>
+		</div>}
+		
+		{!show && <div className="pageNum">
 			<span>Page Num: </span>
-			<input type='text' onChange={getData}/>
-			<button onClick={() => setPageNum(data)}>Enter Page Number</button>
-		</div>
+			<input type='text' value={page} onChange={(page) => setPage(page.target.value)} onKeyDown={(ev) => {
+				if (ev.key === 'Enter') {
+					ev.preventDefault()
+					handlePage(ev.target.value)
+				}
+			}}/>
+			<button onClick={() => handlePage(page)}>Enter Page Number</button>
+		</div>}
 
+		{!show && <button onClick={() => setShow(true)}>Reset Cache Size</button>}
 	</div>
   )
 }

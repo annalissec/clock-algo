@@ -1,38 +1,63 @@
 import "./clock.scss";
 
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function Clock({cache, pageNum}) {
+export default function Clock({cache}) {
+
+	useEffect(() => {
+		console.log(cache)
+	})
+
+	function renderItems(){
+		var list = cache.cache.map((item, index) => {
+			return <li 
+			key={index}
+			style={{color: parseInt(index) === parseInt(cache.clockHand) ? "red" : "black"}}
+			>
+				{item.pageNum} 
+			</li>
+	})
+	return list
+	}
+
+	function renderList(){
+		var list = cache.pageStream.map((item, index) => {
+			return <li 
+			key={index}
+			>
+				{item}
+			</li>
+	})
+	return list
+	}
 
   return (
 	<div className="clock">
 	<div className="table">
-		<table>
-			<thead>
-				<tr>
-					<th>Page Stream</th>
-					<th>Cache</th>
-				</tr>
-			</thead>
-			<tbody>
-				{cache &&
-					cache.pageStream.map((item) => (
-						<tr key={item}>
-							<td>{item}</td>
-						</tr>
-					))
-				}
-				{cache &&
-					cache.cache.map((item) => (
-						<tr key={item.pageNum}>
-							<td>{item.pageNum}</td>
-						</tr>
-					))
-				}
-			</tbody>
-		</table>
+		<div className="col1">
+		<h1>Cache</h1>
+			<ul>
+				<div className="list">
+					{cache && renderItems()}
+				</div>
+			</ul>
+		</div>
+
+		<div className="col2">
+			<h1>Page Stream</h1>
+			<ul>
+				<div className="list">
+					{cache && renderList()}
+				</div>
+			</ul>
+		</div>
 	</div>
+
+	<div className="message">
+			{cache.cacheMessage}
+		</div>
+		
 </div>
   )
 }

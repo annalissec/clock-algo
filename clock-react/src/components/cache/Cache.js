@@ -41,6 +41,8 @@ export class Cache {
 				this.updateClockHand()
 			}
 		}
+
+		// console.log(this.cache)
 	}
 
 	checkExists(page) {
